@@ -3,13 +3,29 @@
 <div class="container p-3">
   <div class="row justify-content-md-center">
     <div class="col col-md-6">
-      <form class="mb-5 row row-cols-lg-12 g-3 align-items-center" [formGroup]="newTodo" (ngSubmit)="addTodo()">
+      <form
+        class="mb-5 row row-cols-lg-12 g-3 align-items-center"
+        [formGroup]="newTodo"
+        (ngSubmit)="addTodo()"
+      >
         <div class="col-lg-6">
-          <input name="title" type="text" class="form-control" placeholder="Todo" formControlName="title">
+          <input
+            name="title"
+            type="text"
+            class="form-control"
+            placeholder="Todo"
+            formControlName="title"
+          />
         </div>
 
         <div class="col-lg-6">
-          <textarea name="content" class="form-control" rows="3" placeholder="description..." formControlName="content"></textarea>
+          <textarea
+            name="content"
+            class="form-control"
+            rows="3"
+            placeholder="description..."
+            formControlName="content"
+          ></textarea>
         </div>
         <div class="col-lg-6">
           <button class="btn btn-primary w-100">Add Task</button>
@@ -19,18 +35,49 @@
       <table class="table">
         <thead>
           <tr>
-          <th>Todo</th>
-          <th>Content</th>
-          <th>Completed</th>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Completed</th>
           </tr>
         </thead>
         <tbody>
-          @for (todo of todos; track $index) {
-            <tr>
-              <td>{{ todo.title }}</td>
-              <td>{{ todo.content }}</td>
-              <td class="text-center"><input type="checkbox" [checked]="todo.isComplete"></td>
-            </tr>
+          @for (todo of completedTodos; track todo.id) {
+          <tr>
+            <td>{{ todo.title }}</td>
+            <td>{{ todo.content }}</td>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                [checked]="todo.isComplete"
+                (click)="toggleComplete(todo)"
+              />
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>In Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (todo of inProgressTodos; track todo.id) {
+          <tr>
+            <td>{{ todo.title }}</td>
+            <td>{{ todo.content }}</td>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                [checked]="todo.isComplete"
+                (click)="toggleComplete(todo)"
+              />
+            </td>
+          </tr>
           }
         </tbody>
       </table>

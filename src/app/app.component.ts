@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ITodo } from './models/itodo';
+import { ITodo } from './shared/models/itodo';
+import { TodoService } from './shared/services/todo.service';
+import { IdService } from './shared/services/id.service';
 
 @Component({
   selector: 'app-root',
@@ -11,24 +13,18 @@ import { ITodo } from './models/itodo';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  todos: ITodo[] = [
-    {
-      title: 'Learn Angular',
-      content: 'Try to learn as fast as possible',
-      isComplete: false,
-    },
-    {
-      title: 'Get Coffee',
-      content: 'Have a cuppa tea in morning',
-      isComplete: true,
-    },
-    {
-      title: 'Build PC',
-      content: 'Get a gaming rig',
-      isComplete: false,
-    },
-  ];
+export class AppComponent implements OnInit {
+  completedTodos: ITodo[];
+  inProgressTodos: ITodo[];
+
+  constructor(private todoService: TodoService, private idService: IdService) {}
+
+  ngOnInit(): void {
+    this.todoService.getTodos().subscribe((todos) => {
+      this.completedTodos = todos.filter((todo) => todo.isComplete);
+      this.inProgressTodos = todos.filter((todo) => !todo.isComplete);
+    });
+  }
 
   newTodo = new FormGroup({
     title: new FormControl<string>(''),
@@ -38,12 +34,18 @@ export class AppComponent {
 
   addTodo() {
     const todo: ITodo = {
+      id: this.idService.getNextId(),
       title: this.newTodo.controls.title.value!,
       content: this.newTodo.controls.content.value!,
       isComplete: false,
-    }
+    };
 
-    this.todos.push(todo);
-    console.log(this.newTodo.value);
+    this.todoService.createTodo(todo);
+    this.newTodo.reset();
+  }
+
+  toggleComplete(todo: ITodo) {
+    const updatedStatus = !todo.isComplete;
+    this.todoService.updateTodoStatus(todo.id, updatedStatus);
   }
 }
