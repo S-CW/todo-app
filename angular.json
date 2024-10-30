@@ -36,8 +36,9 @@
 							}
 						],
 						"styles": [
-							"src/styles.scss"
-						],
+              "@angular/material/prebuilt-themes/cyan-orange.css",
+              "src/styles.scss"
+            ],
 						"scripts": []
 					},
 					"configurations": {
@@ -94,8 +95,9 @@
 							}
 						],
 						"styles": [
-							"src/styles.scss"
-						],
+              "@angular/material/prebuilt-themes/cyan-orange.css",
+              "src/styles.scss"
+            ],
 						"scripts": []
 					}
 				}
