@@ -1,0 +1,124 @@
+<h1 class="text-center">Todo App</h1>
+
+<div class="container p-3">
+  <div class="row justify-content-md-center">
+    <div class="col col-md-6">
+      <form
+        class="mb-5 row row-cols-lg-12 g-3 align-items-center"
+        [formGroup]="newTodo"
+        (ngSubmit)="addTodo()"
+      >
+        <div>
+          <input
+            name="title"
+            type="text"
+            class="form-control"
+            placeholder="Todo"
+            formControlName="title"
+          />
+        </div>
+
+        <div>
+          <textarea
+            name="content"
+            class="form-control"
+            rows="3"
+            placeholder="description..."
+            formControlName="content"
+          ></textarea>
+        </div>
+
+        <div>
+          <button class="btn btn-primary w-100">Add Task</button>
+        </div>
+      </form>
+
+      <div class="card card-offset shadow p-4">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Content</th>
+              <th>Completed</th>
+            </tr>
+          </thead>
+
+          <tbody
+            class="todo-list"
+            cdkDropList
+            #todoList="cdkDropList"
+            [cdkDropListData]="inProgressTodos"
+            [cdkDropListConnectedTo]="doneList"
+            (cdkDropListDropped)="drop($event)"
+          >
+            @if (inProgressTodos.length) { @for (todo of inProgressTodos; track todo.id)
+            {
+            <tr class="todo-box" cdkDrag [cdkDragData]="todo">
+              <td class="col-md">{{ todo.title }}</td>
+              <td class="col-md">{{ todo.content }}</td>
+              <td class="text-center col-md">
+                <input
+                  type="checkbox"
+                  [checked]="todo.isComplete"
+                  (click)="toggleComplete(todo)"
+                />
+              </td>
+            </tr>
+            } } @else {
+            <tr class="wrapper-empty">
+              <td colspan="12">
+                <mat-icon inline="true" fontIcon="post_add"></mat-icon>
+              <p>You have no achievement yet</p>
+              <p>Go achieve something awesome today</p>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card card-offset shadow p-4">
+        <table class="table">
+          <thead>
+            <tr >
+              <th>Title</th>
+              <th>Content</th>
+              <th>In Progress</th>
+            </tr>
+          </thead>
+          <tbody
+            cdkDropList
+            #doneList="cdkDropList"
+            [cdkDropListData]="completedTodos"
+            [cdkDropListConnectedTo]="todoList"
+            (cdkDropListDropped)="drop($event)"
+          >
+          @if (completedTodos.length) {
+            @for (todo of completedTodos; track todo.id) {
+            <tr class="todo-box" cdkDrag [cdkDragData]="todo">
+              <td class="col-md">{{ todo.title }}</td>
+              <td class="col-md">{{ todo.content }}</td>
+              <td class="text-center col-md">
+                <input
+                  type="checkbox"
+                  [checked]="todo.isComplete"
+                  (click)="toggleComplete(todo)"
+                />
+              </td>
+            </tr>
+            }
+          } @else {
+            <tr class="wrapper-empty">
+              <td colspan="12">
+                  <mat-icon inline="true" fontIcon="post_add"></mat-icon>
+                  <p>You have no task yet</p>
+                  <p>Go create a new task</p>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
